@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Tech Hub | Events & Community</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <header class="navbar">
+    <div class="nav-container">
+      <div class="brand">
+        <span class="brand-icon">🚀</span>
+        <div class="brand-text">
+          <span class="brand-title">Student Tech Hub</span>
+          <span class="brand-subtitle">Campus Coding & Innovation Community</span>
+        </div>
+      </div>
+      
+      <!-- Backend Status Badge -->
+      <div class="backend-status-container">
+        <span class="status-indicator status-checking" id="backend-status-dot"></span>
+        <span class="status-label" id="backend-status-text">Checking backend...</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-content">
+      <div class="pill-badge">🎓 Built for Students & Learners</div>
+      <h1 class="hero-title">Student Tech Hub</h1>
+      <p class="hero-description">
+        Discover hands-on technical workshops, campus hackathons, and guest tech talks.
+        Connect your frontend to a Python FastAPI backend in real time!
+      </p>
+      <div class="hero-actions">
+        <a href="#events-section" class="btn btn-primary" id="explore-events-btn">
+          <span>⚡ Explore Events</span>
+        </a>
+        <a href="#register-section" class="btn btn-secondary">
+          <span>📝 Register as a Student</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content Layout -->
+  <main class="main-container">
+
+    <!-- SECTION 1: UPCOMING TECHNICAL EVENTS -->
+    <section id="events-section" class="content-card">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">📅 Upcoming Technical Events</h2>
+          <p class="section-subtitle">
+            Dynamic event listings fetched directly from the FastAPI backend (<code>GET /api/events</code>).
+          </p>
+        </div>
+        
+        <!-- Load Events Action Button -->
+        <button id="load-events-btn" class="btn btn-primary btn-icon">
+          <span class="btn-spinner hidden" id="events-spinner"></span>
+          <span id="load-events-text">🔄 Load Events from Backend</span>
+        </button>
+      </div>
+
+      <!-- Category Filter Pills (client-side filter once loaded) -->
+      <div class="filter-bar hidden" id="filter-bar">
+        <span class="filter-label">Filter:</span>
+        <button class="filter-chip active" data-category="all">All Events</button>
+        <button class="filter-chip" data-category="Web Dev">Web Dev</button>
+        <button class="filter-chip" data-category="Artificial Intelligence">AI & ML</button>
+        <button class="filter-chip" data-category="Hackathon">Hackathon</button>
+        <button class="filter-chip" data-category="Cloud Computing">Cloud</button>
+        <button class="filter-chip" data-category="Open Source">Open Source</button>
+      </div>
+
+      <!-- Events Notification / Error Box -->
+      <div id="events-alert" class="alert hidden" role="alert"></div>
+
+      <!-- Events Grid Container -->
+      <div id="events-container" class="events-grid">
+        <!-- Initial placeholder card before events are fetched -->
+        <div class="placeholder-card" id="events-placeholder">
+          <div class="placeholder-icon">📡</div>
+          <h3>Ready to fetch events!</h3>
+          <p>Click the <strong>"Load Events from Backend"</strong> button above to request upcoming technical workshops from the FastAPI server.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: STUDENT REGISTRATION FORM -->
+    <section id="register-section" class="content-card">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">✍️ Student Registration</h2>
+          <p class="section-subtitle">
+            Sign up for the tech community or reserve your seat for an event via <code>POST /api/register</code>.
+          </p>
+        </div>
+      </div>
+
+      <!-- Form & Status Wrapper -->
+      <div class="registration-layout">
+        
+        <!-- Registration Form Card -->
+        <form id="registration-form" class="registration-form" novalidate>
+          <div class="form-group">
+            <label for="student-name">
+              Full Name <span class="required-star">*</span>
+            </label>
+            <input 
+              type="text" 
+              id="student-name" 
+              name="name" 
+              placeholder="e.g. Alex Johnson" 
+              required
+              autocomplete="name"
+            >
+            <span class="input-hint">Enter your first and last name.</span>
+          </div>
+
+          <div class="form-group">
+            <label for="student-email">
+              Email Address <span class="required-star">*</span>
+            </label>
+            <input 
+              type="email" 
+              id="student-email" 
+              name="email" 
+              placeholder="e.g. alex@college.edu" 
+              required
+              autocomplete="email"
+            >
+            <span class="input-hint">We will send event confirmation to this address.</span>
+          </div>
+
+          <div class="form-group">
+            <label for="event-select">
+              Select an Event <span class="optional-tag">(Optional)</span>
+            </label>
+            <select id="event-select" name="event">
+              <option value="">General Community Membership</option>
+              <!-- Options dynamically populated once events load -->
+            </select>
+            <span class="input-hint">Select a specific workshop or join the general community.</span>
+          </div>
+
+          <!-- Alert message box for registration -->
+          <div id="form-alert" class="alert hidden" role="alert"></div>
+
+          <button type="submit" id="register-submit-btn" class="btn btn-accent btn-full">
+            <span class="btn-spinner hidden" id="register-spinner"></span>
+            <span id="register-btn-text">🚀 Complete Registration</span>
+          </button>
+        </form>
+
+        <!-- Registrations Activity Panel -->
+        <div class="activity-panel">
+          <div class="activity-header">
+            <h3>📋 Recent Session Registrations</h3>
+            <span class="badge" id="registration-count-badge">0 Registrations</span>
+          </div>
+          <p class="activity-desc">
+            Registrations sent in this session are tracked below in real time from the backend response.
+          </p>
+          <div id="registrations-list" class="registrations-list">
+            <div class="empty-list-placeholder">
+              <span>No registrations yet in this session. Be the first to register!</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SECTION 3: BEGINNER ARCHITECTURE GUIDE -->
+    <section class="content-card architecture-card">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">💡 How This Full-Stack App Works</h2>
+          <p class="section-subtitle">
+            A beginner's guide to how the HTML/JS frontend communicates with the Python FastAPI backend.
+          </p>
+        </div>
+      </div>
+
+      <div class="architecture-grid">
+        <div class="arch-step">
+          <div class="step-number">1</div>
+          <h3>Frontend (Client)</h3>
+          <p>HTML creates the layout, CSS provides the design, and JavaScript handles user clicks and form submissions.</p>
+          <div class="code-snippet">fetch('http://127.0.0.1:8000/api/events')</div>
+        </div>
+
+        <div class="arch-step">
+          <div class="step-number">2</div>
+          <h3>HTTP Request & CORS</h3>
+          <p>Browser sends a GET or POST request. FastAPI's CORS middleware allows the browser to receive the data cross-origin.</p>
+          <div class="code-snippet">CORSMiddleware: allow_origins=["*"]</div>
+        </div>
+
+        <div class="arch-step">
+          <div class="step-number">3</div>
+          <h3>FastAPI Backend</h3>
+          <p>Python receives the request, validates data with Pydantic models, and returns structured JSON responses.</p>
+          <div class="code-snippet">return {"success": True, "events": [...]}</div>
+        </div>
+
+        <div class="arch-step">
+          <div class="step-number">4</div>
+          <h3>Dynamic UI Update</h3>
+          <p>JavaScript parses the JSON and dynamically creates HTML event cards and success badges without reloading the page!</p>
+          <div class="code-snippet">container.appendChild(cardElement)</div>
+        </div>
+      </div>
+
+      <div class="docs-callout">
+        <span>📖 Want to explore the backend API interactively?</span>
+        <a href="http://127.0.0.1:8000/docs" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm">
+          Open FastAPI Swagger Docs ↗
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-container">
+      <p><strong>Student Tech Hub</strong> — A beginner-friendly full-stack application built with HTML, CSS, JavaScript, and Python FastAPI.</p>
+      <p class="footer-note">Runs locally on your computer • No external database required</p>
+    </div>
+  </footer>
+
+  <!-- Main JavaScript File -->
+  <script src="script.js"></script>
+</body>
+</html>
